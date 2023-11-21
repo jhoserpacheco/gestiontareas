@@ -4,6 +4,7 @@ import com.sura.gestiontareas.dto.TareaDTO;
 import com.sura.gestiontareas.dto.TareaIdDTO;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -12,5 +13,6 @@ public interface iTareaService {
     TareaDTO buscarTarea(TareaIdDTO idTarea);
     TareaDTO actualizarTarea(TareaDTO tareaDto);
     String borrarTarea(TareaDTO tareaDto);
-    List<TareaDTO> buscarTodosTarea();
+    List<TareaDTO> filtrarTareasPorFechaUsuario(LocalDate fechaInicio, LocalDate fechaFin, Integer idUsuario);
+
 }

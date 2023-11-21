@@ -13,9 +13,11 @@ import com.sura.gestiontareas.service.iTareaService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -74,7 +76,23 @@ public class TareaServiceImp implements iTareaService {
     }
 
     @Override
-    public List<TareaDTO> buscarTodosTarea() {
-        return null;
+    public List<TareaDTO> filtrarTareasPorFechaUsuario(LocalDate fechaInicio, LocalDate fechaFin, Integer idUsuario) {
+        List<TareaEntity> tareas = iTareaRepository.findAll();
+
+        if (fechaInicio != null) {
+            tareas = tareas.stream()
+                    .filter(t -> (t.getFechaInicio().isAfter(fechaInicio) || t.getFechaInicio().isEqual(fechaInicio)) && (t.getIdUsuario().getIdUsuario() == idUsuario))
+                    .collect(Collectors.toList());
+        }
+        if (fechaFin != null) {
+            tareas = tareas.stream()
+                    .filter(t -> t.getFechaFin() == null || t.getFechaFin().isBefore(fechaFin) || t.getFechaFin().isEqual(fechaFin))
+                    .collect(Collectors.toList());
+        }
+
+        // Convertir las entidades a DTO y devolver la lista resultante
+        return tareas.stream()
+                .map(t -> new TareaMapping().tareaEntityToTareaDto(t))
+                .collect(Collectors.toList());
     }
 }

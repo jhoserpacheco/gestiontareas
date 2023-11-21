@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -93,4 +94,19 @@ public class TareaController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping(value = "/filtrar")
+    public ResponseEntity<List<TareaDTO>> buscarTareaFiltro(
+            @RequestParam("idUsuario") int idUsuario,
+            @RequestParam("fechaInicio") String fechaInicio,
+            @RequestParam(value = "fechaFin",required = false) String fechaFin){
+
+        LocalDate fechaInicioParsed = new LocalDateFomatter().dateStringtoLocalDate(fechaInicio);
+        LocalDate fechaFinParsed =  new LocalDateFomatter().dateStringtoLocalDate(fechaFin);
+
+        List<TareaDTO> tareasFiltradas = iTareaService.filtrarTareasPorFechaUsuario(fechaInicioParsed, fechaFinParsed, idUsuario);
+
+        return ResponseEntity.ok(tareasFiltradas);
+    }
 }
+
