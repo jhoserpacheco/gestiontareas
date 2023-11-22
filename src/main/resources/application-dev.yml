@@ -4,3 +4,8 @@ spring:
     username: nz1X24ApTWzFM3u.root
     url: jdbc:mysql://gateway01.us-west-2.prod.aws.tidbcloud.com:4000/gestiontareas
 
+server:
+  error:
+    include-binding-errors: always
+
+
