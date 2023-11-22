@@ -2,8 +2,6 @@ package com.sura.gestiontareas.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import lombok.*;
 import org.hibernate.Hibernate;
 

@@ -3,7 +3,6 @@ package com.sura.gestiontareas.service.imp;
 import com.sura.gestiontareas.dto.TareaDTO;
 import com.sura.gestiontareas.dto.TareaIdDTO;
 import com.sura.gestiontareas.entity.TareaEntity;
-import com.sura.gestiontareas.entity.TareaIdEntity;
 import com.sura.gestiontareas.entity.UsuarioEntity;
 import com.sura.gestiontareas.mapping.TareaMapping;
 import com.sura.gestiontareas.mapping.UsuarioMapping;

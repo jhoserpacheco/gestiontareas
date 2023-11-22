@@ -1,12 +1,7 @@
 package com.sura.gestiontareas.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sura.gestiontareas.entity.TareaIdEntity;
-import com.sura.gestiontareas.entity.UsuarioEntity;
-import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDate;
 
 @Builder
 @Setter

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 @RestController
@@ -28,9 +29,14 @@ public class TareaController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> guardarTarea (@RequestBody TareaDTO tareaDto) throws Exception {
-        try{
+        try {
             TareaDTO tareaResponse = iTareaService.crearTarea(tareaDto);
-            return ResponseEntity.status(HttpStatus.OK).body(new ObjectMapper().writeValueAsString(tareaResponse));
+            if (Objects.nonNull(tareaResponse)){
+                return ResponseEntity.status(HttpStatus.OK).body(new ObjectMapper().writeValueAsString(tareaResponse));
+            }else{
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ObjectMapper().writeValueAsString("No se puedo crear el usuario"));
+
+            }
         }catch (Exception e){
             throw new RuntimeException(e);
         }
