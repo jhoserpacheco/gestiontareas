@@ -8,3 +8,5 @@ siguientes características:
 - Una buena estrategia de branching durante el desarrollo de la prueba
 - APIs que permitan la búsqueda con filtros
 - Al menos un filtro que combine rangos de fecha con usuario
+
+Base de datos alojada en la nube

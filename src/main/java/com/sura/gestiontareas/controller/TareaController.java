@@ -7,6 +7,7 @@ import com.sura.gestiontareas.dto.TareaDTO;
 import com.sura.gestiontareas.dto.TareaIdDTO;
 import com.sura.gestiontareas.service.iTareaService;
 import com.sura.gestiontareas.util.LocalDateFomatter;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ public class TareaController {
     private final iTareaService iTareaService;
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> guardarTarea (@RequestBody TareaDTO tareaDto) throws Exception {
+    public ResponseEntity<String> guardarTarea (@RequestBody @Valid TareaDTO tareaDto) throws Exception {
         try {
             TareaDTO tareaResponse = iTareaService.crearTarea(tareaDto);
             if (Objects.nonNull(tareaResponse)){
@@ -42,7 +43,7 @@ public class TareaController {
         }
     }
     @GetMapping(value ="/{idTarea}/{idUsuario}" , produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TareaDTO> buscarTareaPorId( @PathVariable("idTarea") int idTarea,
+    public ResponseEntity<String> buscarTareaPorId(@Valid @PathVariable("idTarea") int idTarea,
                                                       @PathVariable("idUsuario") int idUsuario) {
 
         TareaIdDTO idTareaDto = TareaIdDTO.builder()
@@ -52,15 +53,19 @@ public class TareaController {
 
         TareaDTO tareaDto = iTareaService.buscarTarea(idTareaDto);
 
-        if (tareaDto != null) {
-            return ResponseEntity.ok(tareaDto);
-        } else {
-            return ResponseEntity.notFound().build();
+        try{
+            if (tareaDto != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(new ObjectMapper().writeValueAsString(tareaDto));
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tarea no encontrada");
+            }
+        }catch (Exception e){
+            throw new RuntimeException(e);
         }
     }
     @PutMapping(value = "/{idTarea}/{idUsuario}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> actualizarTarea (
-            @PathVariable("idTarea") int idTarea,
+            @Valid @PathVariable("idTarea") int idTarea,
             @PathVariable("idUsuario") int idUsuario,
             @RequestBody TareaDTO tareaDto) throws JsonProcessingException {
 
@@ -77,15 +82,15 @@ public class TareaController {
         }
 
         TareaDTO tareaActualizada = iTareaService.actualizarTarea(tareaDto);
-        if (tareaActualizada != null) {
+        try{
             return ResponseEntity.status(HttpStatus.OK).body(new ObjectMapper().writeValueAsString(tareaActualizada));
-        } else {
-            return ResponseEntity.notFound().build();
+        } catch (Exception e){
+            throw new RuntimeException(e);
         }
     }
     @DeleteMapping(value = "/{idTarea}/{idUsuario}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> borrarTarea (
-            @PathVariable("idTarea") int idTarea,
+            @Valid @PathVariable("idTarea") int idTarea,
             @PathVariable("idUsuario") int idUsuario) throws JsonProcessingException {
 
         TareaIdDTO tareaDto = TareaIdDTO.builder()
@@ -97,13 +102,13 @@ public class TareaController {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(new ObjectMapper().writeValueAsString(tareaResponse));
         } catch (JsonProcessingException e) {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException(e);
         }
     }
 
     @GetMapping(value = "/filtrar")
     public ResponseEntity<List<TareaDTO>> buscarTareaFiltro(
-            @RequestParam("idUsuario") int idUsuario,
+            @Valid @RequestParam("idUsuario") int idUsuario,
             @RequestParam("fechaInicio") String fechaInicio,
             @RequestParam(value = "fechaFin",required = false) String fechaFin){
 

@@ -35,10 +35,17 @@ public class UsuarioController {
     }
     @GetMapping(value = "/{idUsuario}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> buscarUsuario(@Valid @PathVariable("idUsuario") Integer idUsuario ){
-        UsuarioDTO usuarioResponse = iUsuarioService.buscarUsuario(idUsuario);
         try{
+            if (idUsuario == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID de usuario no válido");
+            }
+            UsuarioDTO usuarioResponse = iUsuarioService.buscarUsuario(idUsuario);
+            if (usuarioResponse == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario no encontrado");
+            }
             return ResponseEntity.status(HttpStatus.OK).body(new ObjectMapper().writeValueAsString(usuarioResponse));
-        }catch (JsonProcessingException e){
+
+        }catch (Exception e){
             throw new RuntimeException(e);
         }
     }
